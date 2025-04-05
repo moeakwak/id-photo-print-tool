@@ -1,54 +1,67 @@
-# React + TypeScript + Vite
+# 证件照排版工具
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 项目简介
 
-Currently, two official plugins are available:
+这是一个简单实用的证件照排版工具，帮助用户将单张证件照排版到标准相纸上，便于一次性打印多张照片。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+工具使用 canvas 绘制，完全静态。
 
-## Expanding the ESLint configuration
+## 功能特点
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- 支持多种常见证件照尺寸（一寸、两寸等）
+- 支持多种常见相纸尺寸（4寸、5寸、6寸等）
+- 自动计算最佳排版方案，节约相纸
+- 支持自动旋转功能，优化照片排列
+- 支持不同背景色选择
+- 提供高清预览和下载功能
+- 纯浏览器端处理，无需上传照片到服务器
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 使用方法
+
+1. 上传您的证件照
+2. 选择证件照尺寸（如一寸、两寸等）
+3. 选择相纸尺寸（如4寸、5寸、6寸等）
+4. 调整背景色和方向设置（可选）
+5. 预览排版效果
+6. 下载排版结果用于打印
+
+## 本地开发
+
+### 环境要求
+
+- Node.js 16+
+- npm 或 bun
+
+### 安装依赖
+
+```bash
+# 使用npm
+npm install
+
+# 或使用bun
+bun install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 启动开发服务器
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+# 使用npm
+npm run dev
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+# 或使用bun
+bun run dev
 ```
+
+### 构建项目
+
+```bash
+# 使用npm
+npm run build
+
+# 或使用bun
+bun run build
+```
+
+## 许可证
+
+MIT
