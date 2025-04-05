@@ -156,7 +156,7 @@ export const PhotoCanvas: React.FC<PhotoCanvasProps> = ({
           style={{ 
             maxWidth: '100%',
             aspectRatio: String(aspectRatio),
-            border: '1px solid #ddd'
+            border: '1px solid var(--border)'
           }}
         />
       )}
