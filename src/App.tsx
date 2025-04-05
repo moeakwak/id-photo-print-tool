@@ -150,7 +150,6 @@ function App() {
           onAutoRotateChange={handleAutoRotateChange}
           onBgColorChange={handleBgColorChange}
           onDownload={downloadResult}
-          totalPhotos={gridLayout.totalPhotos}
         />
         
         <PreviewPanel

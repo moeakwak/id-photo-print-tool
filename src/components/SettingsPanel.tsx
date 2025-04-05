@@ -29,8 +29,9 @@ interface SettingsPanelProps {
     cols: number
     isRotated: boolean
     totalPhotos: number
+    containerWidth: number
+    containerHeight: number
   }
-  totalPhotos: number
   onUploadPhoto: (e: ChangeEvent<HTMLInputElement>) => void
   onPaperSizeChange: (e: ChangeEvent<HTMLSelectElement>) => void
   onPhotoSizeChange: (e: ChangeEvent<HTMLSelectElement>) => void
@@ -173,6 +174,124 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
           onClick={onDownload}
         >
           下载照片
+        </button>
+        
+        <button 
+          className={`w-full py-2 px-4 rounded font-medium transition-colors ${photo ? 'bg-blue-500 hover:bg-blue-600 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+          disabled={!photo}
+          onClick={() => {
+            const canvas = document.querySelector('canvas');
+            if (!canvas) return;
+            
+            // 创建打印图像
+            const printWindow = window.open('', '_blank');
+            if (!printWindow) {
+              alert('请允许打开弹窗进行打印');
+              return;
+            }
+            
+            // 获取照片和纸张尺寸信息
+            const photoSize = photoSizes.find(s => s.name === selectedPhotoSize);
+            const paperSize = paperSizes.find(s => s.name === selectedPaperSize);
+            
+            if (!photoSize || !paperSize) return;
+            
+            // 确定纸张方向
+            let paperWidth = paperSize.width;
+            let paperHeight = paperSize.height;
+            let isLandscape = false;
+            
+            // 检查gridLayout中的isRotated，或根据纸张宽高比确定方向
+            if ((gridLayout.isRotated || (paperWidth > paperHeight)) !== (gridLayout.containerWidth < gridLayout.containerHeight)) {
+              // 交换宽高，使用横向打印
+              [paperWidth, paperHeight] = [paperHeight, paperWidth];
+              isLandscape = true;
+            }
+            
+            // 将cm转换为px (假设96dpi)
+            const pxPerCm = 96 / 2.54;
+            const paperWidthPx = paperWidth * pxPerCm;
+            const paperHeightPx = paperHeight * pxPerCm;
+            
+            // 写入HTML
+            printWindow.document.write(`
+              <html>
+                <head>
+                  <title>证件照打印 - ${photoSize.description}</title>
+                  <style>
+                    body {
+                      margin: 0;
+                      padding: 0;
+                      width: ${paperWidthPx}px;
+                      height: ${paperHeightPx}px;
+                      position: relative;
+                      background-color: white;
+                    }
+                    .print-container {
+                      position: absolute;
+                      width: ${paperWidthPx}px;
+                      height: ${paperHeightPx}px;
+                      overflow: hidden;
+                    }
+                    .print-image {
+                      position: absolute;
+                      top: 0;
+                      left: 0;
+                      width: ${paperWidthPx}px;
+                      height: ${paperHeightPx}px;
+                    }
+                    @media print {
+                      @page {
+                        size: ${isLandscape ? 'landscape' : 'portrait'};
+                        margin: 0;
+                      }
+                      html, body {
+                        width: 100%;
+                        height: 100%;
+                        margin: 0;
+                        padding: 0;
+                      }
+                      .print-container {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                      }
+                      .print-image {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        object-fit: fill;
+                      }
+                    }
+                  </style>
+                </head>
+                <body>
+                  <div class="print-container">
+                    <img src="${canvas.toDataURL('image/png')}" class="print-image" />
+                  </div>
+                  <script>
+                    // 自动打印后关闭
+                    window.onload = function() {
+                      setTimeout(function() {
+                        window.print();
+                        // 打印对话框关闭后关闭窗口
+                        setTimeout(function() {
+                          window.close();
+                        }, 500);
+                      }, 500);
+                    };
+                  </script>
+                </body>
+              </html>
+            `);
+            printWindow.document.close();
+          }}
+        >
+          打印照片
         </button>
       </div>
 
